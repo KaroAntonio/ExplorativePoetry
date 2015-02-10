@@ -55,13 +55,18 @@
               "content": "push the citroen off the pier"
             },
             {
-              "content": "rip my shirt off"
+                "content": "rip my shirt off",
+                "children": [
+                    {
+                        "content": "staring down drivers passing by on the interstate below"
+                    }
+                ]
             },
             {
               "content": "and yell and yell and yell",
                 "children": [
                     {
-                        "content": "and yell and yell and yell"
+                        "content": "the periphery of the world tingeing red"
                     }
                 ]
             }
@@ -71,7 +76,7 @@
           "content": "Let the stoicism crumble",
           "children": [
             {
-              "content": "into $5 dollars folded into a tiny, tiny swan",
+              "content": "into $5 folded into a tiny, tiny swan",
               "children": [
                 {
                   "content": "I gift Helen the swan in goodwill",
@@ -83,7 +88,7 @@
                           "content": "since smiles, are a segue for betrayal",
                           "children": [
                             {
-                              "content": "since smiles remind Helen of her daughter",
+                              "content": "smiles remind Helen of her daughter",
                               "children": [
                                 {
                                   "content": "Helen, conciously, unthankingly, smiles",
@@ -115,7 +120,7 @@
                   "content": "She's articulately disdainful"
                 },
                 {
-                  "content": "There's a severe negligence of eye contact"
+                  "content": "There's a severe negligence of eye contact in the air"
                 },
                 {
                   "content": "'I feel alone around you sometimes'"
