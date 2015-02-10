@@ -1,0 +1,9 @@
+JSON formatter
+https://www.jsoneditoronline.org/
+
+Future Features:
+Add Children and Branches
+Collaborative Poetry
+Read/Write tree to database (sqlite ideally) 
+Add collision resolution to sperate nodes into horizontal lines
+poetry parser
