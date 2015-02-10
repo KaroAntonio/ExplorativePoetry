@@ -57,17 +57,7 @@ var link = svg.selectAll(".link"),
     node = svg.selectAll(".node");
     
 var textHistory = svg.append("g");
-    
-    
-/*
-textHistory = svg
-    .append("text")
-    .text("")
-    .attr('class','text')
-    .attr("x",(width/2))
-    .attr("y",(height/2));
-*/
-
+   
 d3.json("breathe.json", function(error, json) {
   root = json;
     beginning = root;
@@ -216,7 +206,7 @@ function click(d) {
         .text(function(d,i) { return d.content } )
         .attr('class','text')
         .attr("x",(width/2))
-        .attr("y",function (d,i) {return height - (50 * (i + 0.5))} );
+        .attr("y",function (d,i) {return height - (40 * (i + 0.5))} );
     
     update();
 }
