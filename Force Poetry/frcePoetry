@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html> 
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+</html>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    
+var nw = 700,
+    nh = 60,
+    w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    width = w.innerWidth || e.clientWidth || g.clientWidth,
+    height = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+
+var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g");
+
+    
+function updateWindow(){
+    width = w.innerWidth || e.clientWidth || g.clientWidth;
+    height = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+    svg.attr("width", width).attr("height", height);
+}
+
+window.onresize = updateWindow;
+
+//Node Memory
+var beginning;
+var root;
+var past;
+var current;
+var history = [];
+
+var force = d3.layout.force()
+    .friction(0.50)
+    .linkDistance(100)
+    .charge(-220)
+    .gravity(.01)
+    .theta(0.8)
+    .alpha(0.01)
+    .size([width, height])
+    .on("tick", tick);
+
+var link = svg.selectAll(".link"),
+    node = svg.selectAll(".node");
+    
+var textHistory = svg.append("g");
+   
+d3.json("allistruth.json", function(error, json) {
+  root = json;
+    beginning = root;
+    past = root;
+    current = root;
+    
+    current.x = width/2 - (nw / 2);
+    current.y = height/2 - (nh / 2);
+    
+    
+    update();
+    //Collapse Structure Initally
+    var nodes = flatten(root);
+    nodes.forEach(function(d) {
+        d._children = d.children;
+        d.children = null;
+    });
+    update(); //why are both updates are necessary?
+    
+});
+
+function update() {
+    
+    //fix the position of the current base node
+    current.fixed = true;
+    
+  var nodes = flatten(root),
+      links = d3.layout.tree().links(nodes);
+
+  // Restart the force layout.
+  force
+      .nodes(nodes)
+      .links(links)
+      .start();
+
+  // Update links.
+  link = link.data(links, function(d) { return d.target.id; });
+
+  link.exit().remove();
+
+  link.enter().insert("line", ".node")
+      .attr("class", "link");
+
+  // Update nodes.
+  node = node.data(nodes, function(d) { return d.id; });
+
+  node.exit().remove();
+
+  var nodeEnter = node.enter().append("g")
+        .attr("class", "node")
+        .on("click", click)
+        .call(force.drag);
+
+    nodeEnter.append("rect")
+        .attr("width", nw)
+        .attr("height", nh);
+
+    nodeEnter.append("text")
+        .attr("dy", 50)
+        .attr("dx", nw/2)
+        .text(function(d) { return d.content; });
+
+  node.select("rect")
+      .style("fill", color)
+       .style("opacity", 0);
+    
+    node.select("text")
+        .style("fill", textColor)
+        .style("text-shadow", textShadow);
+}
+
+function free(d) {
+    d.fixed = false;
+}
+
+function tick() {
+    
+    link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+    node
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+
+}
+
+function color(d) {
+  return d._children ? "#e1e1e1" // collapsed package
+      : d.children ? "#ffffff" // expanded package
+      : "#ffffff"; // leaf node
+}
+    
+function textColor(d) {
+  return d._children ? "#f1f1f1" // collapsed package
+      : d.children ? "#d1d1d1" // expanded package
+      : "919191"; // leaf node
+}
+    
+function textShadow(d) {
+  return d._children ? "0 0 0.2em #313131" // collapsed package
+      : d.children ? "0 0 0.2em #ffffff" // expanded package
+      : "0 0 0.1em #ffffff"; // leaf node
+}
+
+// Toggle children on click.
+function click(d) {
+  if (d3.event.defaultPrevented) return; // ignore drag
+    toggleNode(d);
+    
+    //Fix
+    d.fixed = true;
+    
+    //Release old focal node
+    current.fixed = false;
+    
+    //Record visits to new nodes
+    if (history.length <= 0) history.unshift(d);
+    else if (history[0].id != d.id) history.unshift(d);
+    
+    //One link memory
+    past = current;
+    current = d;
+    root = current;
+    
+    //Loop to beggining from leaf node
+    if (d.children == d._children) {
+        current = beginning;
+        root = current;
+        
+        var nodes = flatten(root);
+        collapseNode(root);
+        nodes.forEach(function(d) {
+            collapseNode(d);
+        });
+    }
+
+    textHistory.selectAll("text")
+        .remove();
+    
+    textHistory.selectAll("text")
+        .data(history)
+        .enter()
+        .append("text")
+        .text(function(d,i) { return d.content } )
+        .attr('class','text')
+        .attr("x",(width/2))
+        .attr("y",function (d,i) {return height - (40 * (i + 0.5))} );
+    
+    update();
+}
+    
+function collapseNode(d) {
+    if (d.children) {
+        d._children = d.children;
+        d.children = null;
+    }
+}
+
+function toggleNode(d) {
+    if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+}
+
+// Returns a list of all nodes under the root.
+function flatten(root) {
+  var nodes = [], i = 0;
+
+  function recurse(node) {
+    if (node.children) node.children.forEach(recurse);
+    if (!node.id) node.id = ++i;
+    nodes.push(node);
+  }
+
+  recurse(root);
+  return nodes;
+}
+
+
+</script>

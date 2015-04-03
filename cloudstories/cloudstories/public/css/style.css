@@ -1,0 +1,69 @@
+html, body {  margin:0; padding:0; overflow:hidden }
+svg {  position:fixed; top:0; bottom:0; left:0; right:0; z-index: 1; }
+
+.backgroundRect {
+    fill: #d5d5d5;
+    x: 0;
+    y: 0;
+    z-index: -1;
+}
+
+.storyLine {
+    font: 30px sans-serif;
+    text-anchor: middle;
+}
+
+.branch {
+    font: 30px sans-serif;
+    text-anchor: middle;
+}
+
+#textForm {
+    position: absolute;
+    margin-left: auto ;
+    margin-right: auto ;
+    z-index: 3;
+}
+
+input {
+    line-height: 1.5em;
+    font-size: 18px;
+}
+
+input[type='text'] {
+    border : 1px solid #dddddd;
+}
+
+input:focus {
+    outline:none;
+}
+
+.icon {
+    font: 20px sans-serif;
+    fill: #dddddd;
+    z-index: 5;
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none;
+}
+
+.iconHover {
+    font: 21px sans-serif;
+    fill: #454545;
+    z-index: 5;
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none;
+}
+
+.formButton {
+    font: 30px sans-serif;
+    fill: #dddddd;
+    z-index: 5;
+}
+
+.formButtonHover {
+    font: 30px sans-serif;
+    fill: #454545;
+    z-index: 5;
+}

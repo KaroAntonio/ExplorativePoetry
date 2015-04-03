@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html> 
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+</html>
+
+<body>
+<div id="textForm">
+<form id="newText">
+<input type="text" size="40" name="newText">
+</form>
+</div>
+    
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+//SET Curser
+document.getElementsByTagName("body")[0].style.cursor = "default";
+    
+var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    width = w.innerWidth || e.clientWidth || g.clientWidth,
+    height = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+var fontSize = 30,
+    focusHeight = height * 0.5,
+    formButtonXOffset = 240,
+    formButtonYOffset = 25;
+
+var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g");
+    
+//Color Scheme   
+var forwardColor = '#494949';
+var backColor = '#adadad';
+var colorScale = d3.scale.linear()
+    .range([forwardColor, backColor]) // or use hex values
+    .domain([0, 3])
+    .clamp(true);
+    
+//Set form position
+document.getElementById("textForm")
+    .style.left = width/2 - 230 + "px";
+document.getElementById("textForm")
+    .style.marginTop = height - 110 + "px";
+    
+function updateWindow(){
+    width = w.innerWidth || e.clientWidth || g.clientWidth;
+    height = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+    svg.attr("width", width).attr("height", height);
+}
+
+window.onresize = updateWindow;
+
+//Node Memory
+var beginning,
+    root,
+    past,
+    current;
+    
+var storyLine = [];
+
+var story = svg.append("g");
+var branches = svg.append("g");
+var form = svg.append("g");
+    
+var formButton = svg.append("g");
+    
+d3.json("breathe.json", function(error, json) {
+    
+    //Background Rect
+    /*
+    svg.append("rect")
+            .attr('class', 'backgroundRect')
+            .attr("width", width)
+            .attr("height", height/2 + fontSize);
+            */
+    
+    beginning = json;
+    current = json;
+    storyLine.unshift(beginning);
+    clickStoryLine(beginning);
+    update();
+    
+});
+
+function update() {
+    
+    story.selectAll("text")
+        .remove();
+    
+    story.selectAll("text")
+        .data(storyLine)
+        .enter()
+        .append("text")
+        .text(function(d,i) { return d.content } )
+        .attr('class','storyLine')
+        .attr("fill",storyLineColor)
+        .attr("x",(width/2))
+        .attr("y",function (d,i) {return height - focusHeight - (fontSize * (i + 0.5))} )
+        .on("click", function(d) { clickStoryLine(d) })
+        .on("mouseover", function(d) {
+                 d3.select(this).attr('class', 'storyLineHover'); })
+        .on("mouseout", function(d) {
+                 d3.select(this).attr('class', 'storyLine'); });
+}
+
+// Display Branches of clicked line
+function clickStoryLine(node) {
+    
+    //RESET STORYLINE to current location in canon
+    var reset = [];
+    for (i = 0; i < storyLine.length; i++) {
+        var line  = storyLine[storyLine.length - 1 - i];
+        reset.unshift(line);
+        if (line.content == node.content) 
+            break;
+    }
+    storyLine = [];
+    for (i = 0; i < reset.length; i++) 
+        storyLine.unshift(reset[reset.length - 1 - i]);
+    
+    //DISPLAY Branches
+    branches.selectAll("text")
+        .remove();
+    
+    if (node.children.length > 0) 
+        branches.selectAll("text")
+            .data(node.children)
+            .enter()
+            .append("text")
+            .text(function(d,i) { return d.content } )
+            .attr('class','branch')
+            .attr("x",(width/2))
+            .attr("y",function (d,i) {return height - focusHeight + (fontSize * (i + 0.5))} )
+            .on("click", function(d) { clickBranch(d) })
+            .attr("fill", branchColor)
+            .on("mouseover", function(d) {
+                 d3.select(this).attr("fill", branchColorHover); })
+            .on("mouseout", function(d) {
+                 d3.select(this).attr("fill", branchColor); });
+    
+    //SET Form Height
+    document.getElementById("textForm")
+        .style.marginTop = 
+            height - 
+            focusHeight + 
+            (node.children.length * fontSize) +"px";
+    
+    console.log(node.children.length + " " + fontSize);
+    
+    formButton.selectAll("text")
+            .remove();
+    
+    formButton.selectAll("text")
+            .data(["+"])
+            .enter()
+            .append("text")
+            .attr("x", width / 2 + formButtonXOffset)
+            .attr("y", (height - 
+            focusHeight + 
+            formButtonYOffset + 
+            (node.children.length * fontSize)))
+            .attr('class', 'formButton')
+            .text(function (d) { return d; })
+            .on("click", function() { submitForm() })
+            .on("mouseover", function(d) {
+                 d3.select(this).attr('class', 'formButtonHover'); })
+            .on("mouseout", function(d) {
+                 d3.select(this).attr('class', 'formButton'); });
+    
+    update();
+}
+    
+function storyLineColor(d,i) {
+    console.log(i);
+    return colorScale(i);
+}
+    
+function clickBranch(d) {
+    storyLine.unshift(d);
+    clickStoryLine(d);
+}
+    
+
+    
+function branchColorHover(d) {
+    return (d.children.length > 0) ? "#959595" // has branches
+        : "#717171"; // leaf node
+}
+
+function branchColor(d) {
+    return (d.children.length > 0) ? colorScale[0] // has branches
+        : "#717171"; // leaf node
+}
+    
+function submitForm() {
+    document.forms["newText"].submit();
+}
+
+</script>

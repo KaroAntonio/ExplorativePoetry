@@ -6,4 +6,73 @@ Add Children and Branches
 Collaborative Poetry
 Read/Write tree to database (sqlite ideally) 
 Add collision resolution to sperate nodes into horizontal lines
+<<<<<<< Updated upstream
 poetry parser
+=======
+poetry parser
+
+https://sodadb.com/QlyTN8mTTCIY3sqZl0w6
+
+Database Columns
+ID	ParentID	NumVisits	Text	
+
+NAMES:
+CloudStories
+CloudYarn
+CloudChestnut
+CloudyChestnuts
+
+pass to view, the current story, all the branch stories,
+
+showBeginning
+showStory
+
+the view passes back 
+the ID of the selected branch 
+OR
+the text of a new branch to be entered along with the id of the parent
+
+Indicate the depth of each subtree from a branch x
+
+Visual Design Principles:
+The Interface is divided into the PAST and the FUTURE x
+the Future must be clearly indicated x
+The Future js ideally more Vibrant/interesting/noticeable x
+The size of a branches subtree is indicated by it’s saturation x
+
+How Many Beginnings are there? Infinite? Or a set Beginning?
+
+functionality to optionally replace a line in a story
+
+Functions to Add
+Login With Google 
+Save bookmarks
+An information icon
+Each user can only vote for one story
+Parse a book and add it in line by line
+
+How are tiers proportioned?
+
+Point feed back for lines written 
+point feedback for lines read
+
+Kickstarter supporter tiers for readers and authors
+
+readers get books
+
+authors get $$ related to lines printed
+
+ourwords
+openLegend
+ourLegend
+NetWords
+WordNet
+WordFlo
+cloudwords
+cloudstories
+ourstories
+
+
+
+
+>>>>>>> Stashed changes

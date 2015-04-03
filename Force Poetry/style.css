@@ -1,0 +1,38 @@
+html, body { margin:0; padding:0; overflow:hidden }
+svg { position:fixed; top:0; bottom:0; left:0; right:0; z-index: 1; }
+
+.text {
+    font: 30px sans-serif;
+    fill: #838383;
+    text-anchor: middle;
+}
+
+
+
+.node {
+    fill: #9933FF;
+    color: #9933FF;
+}
+    
+.node circle {
+  cursor: pointer;
+  stroke: #9933FF;
+  stroke-width: 0px;
+}
+
+.node rect {
+  cursor: pointer;
+  stroke: #000000;
+  stroke-width: 0px;
+}
+
+.node text {
+    font: 60px sans-serif;
+    pointer-events: none;
+    text-anchor: middle;
+}
+
+line.link {
+    fill: none;
+    stroke-width: 1.5px;
+}
