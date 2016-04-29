@@ -6,9 +6,6 @@ Add Children and Branches
 Collaborative Poetry
 Read/Write tree to database (sqlite ideally) 
 Add collision resolution to sperate nodes into horizontal lines
-<<<<<<< Updated upstream
-poetry parser
-=======
 poetry parser
 
 https://sodadb.com/QlyTN8mTTCIY3sqZl0w6
@@ -72,7 +69,9 @@ cloudwords
 cloudstories
 ourstories
 
+The Most popular branch is always showed, this gives the most popular branch a bias but it also encourages longer, as opposed to broader stories. 
+
+It represents a compromise to develop deep stories.
 
 
 
->>>>>>> Stashed changes
